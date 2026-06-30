@@ -1,0 +1,40 @@
+[build-system]
+requires = ["uv_build>=0.11.26,<0.12"]
+build-backend = "uv_build"
+
+[project]
+name = "so101-control"
+version = "0.1.0"
+description = "Programmatic control of an SO-101 follower arm via lerobot (joint waypoints + IK)."
+readme = "README.md"
+license = "GPL-3.0-only"
+license-files = ["LICENSE.md"]
+requires-python = ">=3.12"
+authors = [{ name = "Haider Allawi", email = "haider_al@me.com" }]
+keywords = ["robotics", "lerobot", "so-101", "so-101", "inverse-kinematics"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Robotics",
+]
+dependencies = [
+    "cmeel-urdfdom==4.0.1",
+    "cmeel-tinyxml2==10.0.0",
+    "lerobot[kinematics,feetech]>=0.5.1",
+    "numpy>=1.26",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+so101-control = "so101_control.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/youruser/so101-control"
+Repository = "https://github.com/youruser/so101-control"
+Issues = "https://github.com/youruser/so101-control/issues"
