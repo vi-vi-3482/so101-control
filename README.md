@@ -16,10 +16,6 @@ required. Install it as a library in your own project, or use the bundled
 | `src/so101_control/control.py`| Reusable primitives: `move_to_joints`, `go_to_ee`, `home`, `rest`.    |
 | `src/so101_control/cli.py`    | The `so101-control` command-line entry point.                          |
 | `examples/`                   | Example scripts showing library usage.                                 |
-| `so101_commands.md`*          | Copy-pasteable lerobot CLI commands (calibrate, teleoperate, record).  |
-| `PLACO_FIX.md`*               | Notes on the `placo` / `cmeel-urdfdom` wheel conflict and the pin that fixes it. |
-
-\* If present alongside this README.
 
 ## Installation
 
@@ -37,7 +33,7 @@ uv sync
 This installs the `so101_control` package (importable as `import so101_control`)
 together with `lerobot[kinematics,feetech]` (which pulls in `placo` for IK) and
 pins `cmeel-urdfdom==4.0.1` to work around a shared-library mismatch in the
-placo wheels (see [`PLACO_FIX.md`](PLACO_FIX.md) if present).
+placo wheels.
 
 ### As a dependency in your own project
 
@@ -47,7 +43,7 @@ Add it to your `pyproject.toml` dependencies (or let `uv` do it for you):
 # from a local checkout
 uv add /path/to/so101-control
 # …or from git
-uv add "git+https://github.com/youruser/so101-control.git"
+uv add "git+https://github.com/vi-vi-3482/so101-control.git"
 ```
 
 Then import it from your own code:
@@ -85,13 +81,13 @@ cd ..
 ### Calibrate the arm (one-time)
 
 If you haven't already calibrated your follower, follow the commands in
-[`so101_commands.md`](so101_commands.md). Calibration is stored under
+[LeRobot](https://huggingface.co/docs/lerobot/en/so101). Calibration is stored under
 `~/.cache/huggingface/lerobot/calibration/robots/<robot-id>/` and is located
 automatically by the `--robot-id` you pass to the CLI.
 
 ## Quick start
 
-Once installed, the `so101-control` CLI is available on your PATH.
+Once installed, the `so101-control` CLI is available.
 
 Dry-run (no hardware needed — prints the planned trajectory):
 
@@ -125,14 +121,12 @@ You can also invoke the module directly without installing the console script:
 
 ```bash
 uv run python -m so101_control.cli --mode home --dry-run
-# or, from a source checkout:
-uv run so101-control --mode home --dry-run
 ```
 
 See the **Library usage** section below for the full API, library usage, safety
 knobs, and the joint schema.
 
-## Using the wrappers in your own code
+## Library usage
 
 ```python
 import time
@@ -186,6 +180,41 @@ robot.disconnect()
 
 A ready-to-edit version of the above lives at
 [`examples/example_move_ee.py`](examples/example_move_ee.py).
+
+### Primitives
+
+The package exposes four reusable primitives (all runnable without hardware
+via `dry_run=True`):
+
+| Primitive        | Description                                              |
+|------------------|----------------------------------------------------------|
+| `move_to_joints` | Smoothly interpolate to a `*.pos` -> value joint dict.   |
+| `go_to_ee`       | Solve IK and route the result through `move_to_joints`. |
+| `home`           | Return the arm to `HOME_JOINTS` (extended, neutral).    |
+| `rest`           | Return the arm to `REST_JOINTS` — the curled-up pose.   |
+
+### Joint schema
+
+SO-101 has 5 arm DOF + 1 gripper. The package exposes the following constants:
+
+| Constant       | Value                                                                  |
+|----------------|------------------------------------------------------------------------|
+| `ARM_JOINTS`   | `shoulder_pan, shoulder_lift, elbow_flex, wrist_flex, wrist_roll`      |
+| `ALL_JOINTS`   | `ARM_JOINTS + [gripper]`                                               |
+| `ACTION_KEYS`  | `ARM_JOINTS`/`ALL_JOINTS` suffixed with `.pos` (the lerobot action keys). |
+| `EE_FRAME`     | `gripper_frame_link` — the IK target frame in the SO-ARM100 URDF.      |
+| `HOME_JOINTS`  | Neutral extended pose (all arm joints at 0°, gripper at 50).            |
+| `REST_JOINTS`  | Curled-up pose; safe for storage / power-off.                         |
+
+### Safety knobs
+
+* `--max-relative-target` (deg, CLI) / `max_relative_target` (lerobot config):
+  clips per-step joint jumps inside `send_action`. Strongly recommended on
+  hardware.
+* `duration_s` / `fps`: control the interpolation rate. Slower = gentler.
+* `orientation_weight` (default `0.0`): IK orientation weight. `0.0` means
+  position-only; pass `--target-rpy` to add a soft orientation constraint.
+* `position_weight` (default `1.0`): IK position weight.
 
 ## Additional Notes
 The URDF file path must be an absolute path from the system root, otherwise it

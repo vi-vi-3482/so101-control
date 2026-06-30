@@ -4,6 +4,12 @@ Installed as the `so101-control` console script (see `[project.scripts]` in
 `pyproject.toml`). It wraps the primitives in `so101_control.control` so the
 arm can be driven from the shell without writing any Python.
 
+Modes:
+    joint   -- move to a joint-angle target (--target-joints)
+    ee      -- move the end-effector to a Cartesian target via IK (--target-xyz)
+    home    -- return to HOME_JOINTS (neutral extended pose)
+    status  -- print current joint angles and the FK end-effector pose
+
 Run `so101-control --help` for the full argument list, or invoke the module
 directly with `python -m so101_control.cli`.
 """

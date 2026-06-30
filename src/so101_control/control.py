@@ -2,12 +2,13 @@
 """Programmatic control of an SO-101 follower arm.
 
 This module is part of the `so101_control` package (installed as
-`so101-control`). It exposes three reusable primitives, all runnable without
+`so101-control`). It exposes four reusable primitives, all runnable without
 hardware via `dry_run=True`:
 
     move_to_joints(robot, target)        # joint-angle waypoint move
     go_to_ee(kinematics, robot, xyz)     # inverse-kinematics Cartesian move
-    home(robot)                          # return to HOME_JOINTS
+    home(robot)                          # return to HOME_JOINTS (neutral)
+    rest(robot)                          # return to REST_JOINTS (curled up)
 
 The package also provides a `so101-control` command-line entry point (see
 `so101_control.cli`) that wraps these primitives.
@@ -67,7 +68,8 @@ Prerequisites
   `lerobot-calibrate`) lives under
   `~/.cache/huggingface/lerobot/calibration/robots/<robot-id>/`. The
   `--robot-id` passed to the CLI must match the id used during calibration.
-  See `so101_commands.md` for copy-pasteable calibration commands.
+  See the [lerobot SO-101 docs](https://huggingface.co/docs/lerobot/en/so101)
+  for calibration instructions.
 
 Notes
 -----
@@ -90,10 +92,12 @@ import numpy as np
 from lerobot.model.kinematics import RobotKinematics
 
 
-# TODO: remove this inline helper if a future lerobot release (>=0.5.2) re-exports
-# `follower_smooth_move_to` from `lerobot.common.control_utils`. As of lerobot
-# 0.5.1 on PyPI, that submodule is absent, so we inline the function (ported
-# verbatim from the lerobot repo's src/lerobot/common/control_utils.py).
+# Carried from the lerobot dev version: as of lerobot 0.5.1 on PyPI,
+# `lerobot.common.control_utils` (which exposes `follower_smooth_move_to` in
+# the dev branch) is not packaged. This is a verbatim port of the helper from
+# lerobot's src/lerobot/common/control_utils.py, re-exported here so callers do
+# not need to depend on an unreleased lerobot submodule. Drop it once a stable
+# lerobot release re-exports `follower_smooth_move_to`.
 def follower_smooth_move_to(
     robot, current: dict, target: dict, duration_s: float = 1.0, fps: int = 30
 ) -> None:
@@ -132,7 +136,7 @@ HOME_JOINTS = {
     "gripper.pos": 50.0,
 }
 
-REST_JOINTS = {  # TODO manually find the correct poses for this
+REST_JOINTS = {
     "shoulder_pan.pos": 0.0,
     "shoulder_lift.pos": -95.0,
     "elbow_flex.pos": 95.0,
@@ -333,7 +337,7 @@ def home(
 def rest(
     robot, *, duration_s: float = 3.0, fps: int = 30, dry_run: bool = False
 ) -> None:
-    """Return the arm to REST_JOINTS."""
+    """Return the arm to REST_JOINTS (the curled-up pose)."""
     move_to_joints(robot, REST_JOINTS, duration_s=duration_s, fps=fps, dry_run=dry_run)
 
 

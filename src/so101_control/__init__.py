@@ -1,9 +1,9 @@
 """so101_control — programmatic control of an SO-101 follower arm.
 
-This package wraps lerobot's SO-101 follower with three reusable primitives
-(`move_to_joints`, `go_to_ee`, `home`) plus a few helpers (`print_status`,
-`current_joints`, `current_ee_pose`, `rest`). It is installable as the
-`so101-control` distribution and also exposes a `so101-control` CLI (see
+This package wraps lerobot's SO-101 follower with four reusable primitives
+(`move_to_joints`, `go_to_ee`, `home`, `rest`) plus a few helpers
+(`print_status`, `current_joints`, `current_ee_pose`). It is installable as
+the `so101-control` distribution and also exposes a `so101-control` CLI (see
 `so101_control.cli`).
 """
 

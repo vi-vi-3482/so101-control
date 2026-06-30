@@ -11,7 +11,7 @@ license = "GPL-3.0-only"
 license-files = ["LICENSE.md"]
 requires-python = ">=3.12"
 authors = [{ name = "Haider Allawi", email = "haider_al@me.com" }]
-keywords = ["robotics", "lerobot", "so-101", "so-101", "inverse-kinematics"]
+keywords = ["robotics", "lerobot", "so-101", "so-100", "inverse-kinematics"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
@@ -35,6 +35,6 @@ dev = ["pytest>=8.0"]
 so101-control = "so101_control.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/youruser/so101-control"
-Repository = "https://github.com/youruser/so101-control"
-Issues = "https://github.com/youruser/so101-control/issues"
+Homepage = "https://github.com/vi-vi-3482/so101-control"
+Repository = "https://github.com/vi-vi-3482/so101-control"
+Issues = "https://github.com/vi-vi-3482/so101-control/issues"
