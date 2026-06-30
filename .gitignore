@@ -9,3 +9,5 @@ wheels/
 # Virtual environments
 .venv
 .pytest_cache/
+so101_new_calib.urdf
+assets/
