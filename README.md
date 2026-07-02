@@ -25,7 +25,7 @@ installer such as `pip`).
 ### From source (development)
 
 ```bash
-git clone <this-repo>
+git clone https://github.com/vi-vi-3482/so101-control
 cd so101-control
 uv sync
 ```
@@ -34,6 +34,18 @@ This installs the `so101_control` package (importable as `import so101_control`)
 together with `lerobot[kinematics,feetech]` (which pulls in `placo` for IK) and
 pins `cmeel-urdfdom==4.0.1` to work around a shared-library mismatch in the
 placo wheels.
+
+### Platform compatibility
+
+CI runs on macOS and Linux. Windows is **not currently supported** for direct
+installation: the `placo`/`pin`/`coal-library` chain depends on `cmeel-qhull`,
+which has no prebuilt Windows wheel and fails to build from source on recent
+CMake (its `cmake_minimum_required` predates 3.5, which modern CMake no longer
+accepts). This is an upstream packaging issue, not specific to `so101-control`.
+
+On Windows, run `so101-control` inside [WSL](https://learn.microsoft.com/en-us/windows/wsl/)
+using a Linux install of lerobot until a newer upstream release ships working
+Windows wheels.
 
 ### As a dependency in your own project
 
