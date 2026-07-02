@@ -23,7 +23,7 @@ from so101_control.control import (
     rest,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __all__ = [
     "HOME_JOINTS",
     "ARM_JOINTS",

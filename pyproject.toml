@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "so101-control"
-version = "0.1.0"
+version = "0.1.1"
 description = "Programmatic control of an SO-101 follower arm via lerobot (joint waypoints + IK)."
 readme = "README.md"
 license = "GPL-3.0-only"
@@ -19,7 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Topic :: Scientific/Engineering :: Robotics",
+    "Topic :: Scientific/Engineering",
 ]
 dependencies = [
     "cmeel-urdfdom==4.0.1",
